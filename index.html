@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang = "en">
-
   <head>
     <meta charset = "UTF-8">
     <meta http-equiv = "X-UA-Compatible" content = "IE=edge">
@@ -14,57 +13,66 @@
 
   <!-- Body of webpage -->
   <body>
-    
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Navbar</a>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-end">
+      <a class="navbar-brand" href="#">Portfolio</a>
+
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
-
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="#">Features</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="#">Pricing</a>
-          </li>
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown link
+          <!-- Navbar Buttons -->
+          <li v-for = "(page, index) in pages" class="nav-item" :key="index">
+            <a 
+              class           = "nav-link" 
+              aria-current    = "page"
+              :href           = "page.link.url"
+              :title          = "`This link goes to the ${page.link.text} page`"
+              @click.prevent  = "activePage = index"
+              >{{page.link.text}}
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
           </li>
 
         </ul>
       </div>
     </nav>
 
+    <!-- Page Content -->
     <div id = "content" class="container">
-      <h1>{{ pageTitle }}</h1>
-      <p>{{ subTitle }}</p>
+      <h1>{{ pages[activePage].pageTitle }}</h1>
+      <p>{{ pages[activePage].content }}</p>
     </div>
 
     <!-- Templated Script -->
-    <script>
+    <script> 
       Vue.createApp({
         data(){
           return{
-            pageTitle: "Tessa Loh",
-            subTitle: "Technical Artist"
+            activePage: 0,
+            pages: [
+              {
+                link      : {text: 'Home', url: 'index.html'},
+                pageTitle : 'Home Page',
+                content   : 'This is the Home content'
+              },
+              {
+                link      : {text: 'Projects', url: 'projects.html'},
+                pageTitle : 'Projects Page',
+                content   : 'This is the Project content'
+              },
+              {
+                link      : {text: 'Contact', url: 'contact.html'},
+                pageTitle : 'Contact Page',
+                content   : 'This is the Contact content'
+              }
+            ]
           };
         }
-      }).mount('#content');
+      }).mount('body');
+
     </script>
 
   </body>
