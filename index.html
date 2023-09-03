@@ -15,59 +15,83 @@
   <!-- Body of webpage -->
   <body>
 
-    <!-- Navbar -->
-    <nav class = "navbar navbar-expand-sm bg-dark navbar-dark justify-content-end">
-      <div class = "container-fluid">
-        <a class = "navbar-brand" href="#">Portfolio</a>
-        <ul class = "navbar-nav me-auto mb-2 mb-lg-0">
-          <!-- Navbar Buttons -->
-          <li v-for = "(page, index) in pages" class="nav-item" :key="index">
-            <a 
-              class           = "nav-link" 
-              aria-current    = "page"
-              :href           = "page.link.url"
-              :title          = "`This link goes to the ${page.link.text} page`"
-              @click.prevent  = "activePage = index"
-              >{{page.link.text}}
-            </a>
-          </li>
+    <!-- Accessing Navbar components from script -->
+    <navbar
+      :pages          = "pages"
+      :active-page    = "activePage"
+      :nav-link-click = "(index) => activePage = index"
+    ></navbar>
 
-        </ul>
-      </div>
-    </nav>
-
-    <!-- Page Content -->
-    <div id = "content" class="container">
-      <h1>{{ pages[activePage].pageTitle }}</h1>
-      <p>{{ pages[activePage].content }}</p>
-    </div>
+    <!-- Accessing content of page from app component from script-->
+    <page-viewer
+      :page = "pages[activePage]"
+    ></page-viewer>
 
     <!-- Templated Script -->
     <script> 
-      Vue.createApp({
+
+      //create an app containing data of pages
+      let app = Vue.createApp({
         data(){
           return{
             activePage: 0,
             pages: [
               {
-                link      : {text: 'Home', url: 'index.html'},
-                pageTitle : 'Home Page',
-                content   : 'This is the Home content'
+                link        : {text: 'Home', url: 'index.html'},
+                pageTitle   : 'Home Page',
+                pageContent : 'This is the Home content'
               },
               {
-                link      : {text: 'Projects', url: 'projects.html'},
-                pageTitle : 'Projects Page',
-                content   : 'This is the Project content'
+                link        : {text: 'Projects', url: 'projects.html'},
+                pageTitle   : 'Projects Page',
+                pageContent : 'This is the Project content'
               },
               {
-                link      : {text: 'Contact', url: 'contact.html'},
-                pageTitle : 'Contact Page',
-                content   : 'This is the Contact content'
+                link        : {text: 'Contact', url: 'contact.html'},
+                pageTitle   : 'Contact Page',
+                pageContent : 'This is the Contact content'
               }
             ]
           };
         }
-      }).mount('body');
+      });
+
+      //creating a dynamic component for each page
+      //consisting of title and content
+      app.component('page-viewer', {
+        props: ['page'],
+        template: `
+          <div class="container">
+            <h1>{{page.pageTitle}}</h1>
+            <p>{{page.pageContent}}</p>
+          </div>`
+      });
+
+      //creating a dynamic component for navbar
+      app.component('navbar', {
+        props: ['pages', 'activePage', 'navLinkClick'],
+        template: `
+          <nav :class = "['navbar', 'navbar-expand-lg', 'navbar-dark', 'bg-dark']">
+            <div class = "container-fluid">
+              <a class = "navbar-brand" href="#">Portfolio</a>
+              <ul class = "navbar-nav me-auto mb-2 mb-lg-0">
+                <li v-for = "(page, index) in pages" class="nav-item" :key="index">
+                  <a 
+                    class           = "nav-link"
+                    :class          = "{active: activePage == index}"
+                    aria-current    = "page"
+                    :href           = "page.link.url"
+                    :title          = "\`This link goes to the \${page.link.text} page\`"
+                    @click.prevent  = "navLinkClick(index)"
+                    >{{page.link.text}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+        </nav>`
+      });
+
+      app.mount('body')
 
     </script>
 
