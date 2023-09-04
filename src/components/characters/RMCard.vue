@@ -1,0 +1,90 @@
+<template>
+  <div class="character-card">
+    <h4>{{ character.name }}</h4>
+    <div class="status">
+      <span v-if="statusColorR" class="status-icon-r"></span>
+      <span v-else-if="statusColorG" class="status-icon-g"></span>
+      <span>Status: {{ character.status }}</span>
+    </div>
+    <img :src="character.image" />
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Card",
+  props: {
+    character: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      status: this.character.status,
+    };
+  },
+  computed: {
+    statusColorR() {
+      if (this.status === "Dead") {
+        return 1;
+      } else return 0;
+    },
+    statusColorG() {
+      if (this.status === "Alive") {
+        return 1;
+      } else return 0;
+    },
+  },
+};
+</script>
+
+<style scoped>
+.character-card {
+  width: 300px;
+  height: auto;
+  min-height: 400px;
+  background: rgb(83, 85, 92);
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 10px 15px;
+  margin-bottom: 24px;
+  margin-right: 10px;
+  transition: all 0.2s linear;
+  cursor: pointer;
+  color: white;
+  display: inline-block;
+}
+.status {
+  display: flex;
+  justify-content: center;
+}
+.status-icon-r,
+.status-icon-g {
+  margin: auto 0;
+  height: 0.5rem;
+  width: 0.5rem;
+  margin-right: 0.375rem;
+  background: rgb(214, 61, 46);
+  border-radius: 50%;
+}
+.status-icon-g {
+  background: rgb(92 199 12);
+}
+img {
+  margin-top: 3%;
+}
+.character-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 5px 12px 0 rgba(0, 0, 0, 0.2), 0 1px 15px 0 rgba(0, 0, 0, 0.19);
+}
+.character-card > .title {
+  margin: 0;
+}
+.character-link {
+  color: black;
+  text-decoration: none;
+  font-weight: 100;
+}
+
+</style>
